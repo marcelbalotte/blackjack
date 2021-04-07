@@ -6,7 +6,7 @@ public class Baralho {
     private int topo;
 
     public Baralho(int qntBaralhos) {
-        this.cartas = new Carta [52*qntBaralhos];
+        this.cartas = new Carta[52 * qntBaralhos];
         this.topo = 0;
 
         int posicao = 0;
@@ -43,11 +43,11 @@ public class Baralho {
     }
 
     public void push(Carta carta) {
-        if (! this.isFull()) {
+        if (!this.isFull()) {
             this.cartas[this.topo] = carta;
             this.topo++;
         } else {
-            System.out.println("Não foi possível inserir o elemento "+carta+" pois a pilha já está cheia!");
+            System.out.println("Não foi possível inserir o elemento " + carta + " pois a pilha já está cheia!");
         }
     }
 
@@ -73,8 +73,12 @@ public class Baralho {
         return this.topo == 0;
     }
 
-    public void reset() { this.topo = 0; }
+    public void reset() {
+        this.topo = 0;
+    }
 
-    public int size() { return this.topo; }
+    public int size() {
+        return this.topo;
+    }
 
 }

@@ -1,8 +1,3 @@
 public enum Naipe {
-
-    Copas,
-    Ouro,
-    Espadas,
-    Paus
-
+    Copas, Ouro, Espadas, Paus
 }
