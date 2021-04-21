@@ -13,8 +13,15 @@ public class Carta {
     }
 
     public int getNumero() {
+
+        //Q, J, K VALEM 10
         if (this.numero >= 11) {
             return 10;
+        }
+
+        //ÁS VALE 11 POR DEFAULT. A LÓGICA PRA VALIDAR SE VALE 1 OU 11 ESTÁ NA CLASSE Mao
+        if (this.numero == 1) {
+            return 11;
         }
 
         return this.numero;

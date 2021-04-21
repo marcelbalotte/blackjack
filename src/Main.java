@@ -1,11 +1,10 @@
 import java.util.Scanner;
 
 //TODO: fazer restrição de 5 cartas ou até número 17
-//TODO: carta Ás valendo 1 ou 11
 
 public class Main {
     // declaraão de constantes
-    public static final int RESTRICAO_QUANTIDADE_CARTAS = 5;
+    public static final int RESTRICAO_QUANTIDADE_CARTAS = 7;
     public static final int RESTRICAO_QUANTIDADE_PONTOS = 17;
     public static final int VALOR_PONTUACAO = 21;
     public static final String NOME_OPERADOR_HUMANO = "jogador";
@@ -23,16 +22,20 @@ public class Main {
         int pontosDoJogador = 0;
         int pontosDoComputador = 0;
         int qtdBaralhos = 0;
-
-        qtdBaralhos = persistirEntradaQuantidadeDeck(enter);
-
-        Baralho baralho = new Baralho(qtdBaralhos);
-
-        System.out.println("\nComeçaremos o jogo com um deck de " + qtdBaralhos * 52 + " cartas!");
+        Baralho baralho;
 
         do {
+
+            qtdBaralhos = persistirEntradaQuantidadeDeck(enter);
+
+            baralho = new Baralho(qtdBaralhos);
+
+            System.out.println("\nComeçaremos o jogo com um deck de " + qtdBaralhos * 52 + " cartas!");
+
             // CÓDIGOS DA VEZ DO JOGADOR
             Mao maoJogador = new Mao(NOME_OPERADOR_HUMANO);
+
+            // JOGADOR COMEÇA COM DUAS CARTAS
 
             maoJogador.push(baralho.pop());
             maoJogador.push(baralho.pop());
@@ -43,30 +46,40 @@ public class Main {
             if (maoJogador.getSomaDaMao() == VALOR_PONTUACAO) {
                 System.out.println(
                         "\nEita, que sorte! Você tirou 21 nas suas duas cartas inicias, vamos aguardar a vez do próximo...");
+            } else if (maoJogador.getSomaDaMao() >= RESTRICAO_QUANTIDADE_PONTOS) {
+                System.out.println("\nVocê atingiu o limite de 17 pontos para essa rodada!");
             } else {
                 int comprarOutraCarta = 0;
 
                 while (comprarOutraCarta != 2) {
-                    // System.out.println(
-                    //         "\nDeseja fazer um hit (comprar uma carta) ou um stand (parar)? (Digite 1 para hit ou 2 para stand)");
-                    // comprarOutraCarta = enter.nextInt();
 
-                    comprarOutraCarta = persistirEntradaStandHit(enter);
+                    if (maoJogador.getTopo() < RESTRICAO_QUANTIDADE_CARTAS && maoJogador.getSomaDaMao() < 17) {
+                        comprarOutraCarta = persistirEntradaStandHit(enter);
 
-                    if (comprarOutraCarta == 1) {
-                        maoJogador.push(baralho.pop());
+                        if (comprarOutraCarta == 1) {
+                            maoJogador.push(baralho.pop());
 
-                        System.out.println("\nSuas cartas agora são:");
-                        maoJogador.imprimir();
+                            System.out.println("\nSuas cartas agora são:");
+                            maoJogador.imprimir();
 
-                        if (maoJogador.getSomaDaMao() == VALOR_PONTUACAO) {
-                            System.out.println("\nBoa! Você tirou 21, agora vamos aguardar a vez do próximo");
-                            break;
-                        } else if (maoJogador.getSomaDaMao() > VALOR_PONTUACAO) {
-                            System.out.println("\nPuts, que azar, você tirou mais que 21!");
-                            pontosDoComputador++;
-                            break;
+                            if (maoJogador.getSomaDaMao() == VALOR_PONTUACAO) {
+                                System.out.println("\nBoa! Você tirou 21, agora vamos aguardar a vez do próximo");
+                                break;
+                            } else if (maoJogador.getSomaDaMao() > VALOR_PONTUACAO) {
+                                System.out.println("\nPuts, que azar, você tirou mais que 21!");
+                                pontosDoComputador++;
+                                break;
+                            }
                         }
+                    } else {
+
+                        if (maoJogador.getSomaDaMao() >= 17) {
+                            System.out.println("\nVocê atingiu o limite de 17 pontos para essa rodada!");
+                        } else {
+                            System.out.println("\nVocê atingiu o limite de 5 hits para essa rodada!");
+                        }
+
+                        break;
                     }
                 }
             }
@@ -74,13 +87,15 @@ public class Main {
             // CÓDIGOS DA VEZ DO COMPUTADOR
             if (maoJogador.getSomaDaMao() <= VALOR_PONTUACAO) {
                 Mao maoComputador = new Mao(NOME_OPERADOR_MAQUINA);
+
+                // JOGADOR COMEÇA COM DUAS CARTAS
                 maoComputador.push(baralho.pop());
                 maoComputador.push(baralho.pop());
 
                 System.out.println("\nAs duas cartas iniciais do computador são:");
                 maoComputador.imprimir();
 
-                if (maoComputador.getSomaDaMao() == 21 && maoJogador.getSomaDaMao() == VALOR_PONTUACAO) {
+                if (maoComputador.getSomaDaMao() == VALOR_PONTUACAO && maoJogador.getSomaDaMao() == VALOR_PONTUACAO) {
                     System.out.println("\nPuts! O computador também tirou 21, deu empate nessa rodada...");
                 } else if (maoComputador.getSomaDaMao() == VALOR_PONTUACAO) {
                     System.out.println("\nPuts! O computador tirou 21, você perdeu essa rodada!");
@@ -92,24 +107,66 @@ public class Main {
                 } else if (maoComputador.getSomaDaMao() > VALOR_PONTUACAO) {
                     System.out.println("\nVocê ganhou essa rodada! O computador ultrapassou 21!");
                     pontosDoJogador++;
-                } else {
-                    while (maoComputador.getSomaDaMao() < VALOR_PONTUACAO) {
-                        System.out.println("\nO computador faz um hit:");
-                        maoComputador.push(baralho.pop());
-                        maoComputador.imprimir();
+                } else if (maoComputador.getSomaDaMao() >= RESTRICAO_QUANTIDADE_PONTOS) {
 
-                        if (maoComputador.getSomaDaMao() == 21 && maoJogador.getSomaDaMao() == VALOR_PONTUACAO) {
-                            System.out.println("\nPuts! O computador também tirou 21, deu empate nessa rodada...");
-                        } else if (maoComputador.getSomaDaMao() > maoJogador.getSomaDaMao()
-                                && maoComputador.getSomaDaMao() <= VALOR_PONTUACAO) {
-                            System.out.println(
-                                    "\nPuts! O computador tirou uma mão maior que a sua, você perdeu essa rodada!");
-                            pontosDoComputador++;
+                    System.out.println("\nO computador atingiu o limite de 17 pontos para essa rodada!");
+
+                    if (maoComputador.getSomaDaMao() == maoJogador.getSomaDaMao()) {
+                        System.out.println("\nHouve empate!");
+                    } else if (maoComputador.getSomaDaMao() > maoJogador.getSomaDaMao()) {
+                        System.out.println(
+                                "\nPuts! O computador tirou uma mão maior que a sua, você perdeu essa rodada!");
+                        pontosDoComputador++;
+                    } else {
+                        System.out.println("\nVocê ganhou essa rodada, pois fez mais pontos que o computador");
+                        pontosDoJogador++;
+                    }
+
+                } else {
+
+                    while (maoComputador.getSomaDaMao() < VALOR_PONTUACAO) {
+
+                        if (maoComputador.getTopo() < RESTRICAO_QUANTIDADE_CARTAS
+                                && maoComputador.getSomaDaMao() < 17) {
+                            System.out.println("\nO computador faz um hit:");
+                            maoComputador.push(baralho.pop());
+                            maoComputador.imprimir();
+
+                            if (maoComputador.getSomaDaMao() == VALOR_PONTUACAO
+                                    && maoJogador.getSomaDaMao() == VALOR_PONTUACAO) {
+                                System.out.println("\nPuts! O computador também tirou 21, deu empate nessa rodada...");
+                            } else if (maoComputador.getSomaDaMao() > maoJogador.getSomaDaMao()
+                                    && maoComputador.getSomaDaMao() <= VALOR_PONTUACAO) {
+                                System.out.println(
+                                        "\nPuts! O computador tirou uma mão maior que a sua, você perdeu essa rodada!");
+                                pontosDoComputador++;
+                                break;
+                            } else if (maoComputador.getSomaDaMao() > VALOR_PONTUACAO) {
+                                System.out.println("\nVocê ganhou essa rodada! O computador ultrapassou 21!");
+                                pontosDoJogador++;
+                            }
+                        } else {
+
+                            if (maoJogador.getSomaDaMao() >= 17) {
+                                System.out.println("\nO computador atingiu o limite de 17 pontos para essa rodada!");
+                            } else {
+                                System.out.println("\nO computador atingiu o limite de 5 hits para essa rodada!");
+                            }
+
+                            if (maoComputador.getSomaDaMao() == maoJogador.getSomaDaMao()) {
+                                System.out.println("\nHouve empate!");
+                            } else if (maoComputador.getSomaDaMao() > maoJogador.getSomaDaMao()) {
+                                System.out.println(
+                                        "\nPuts! O computador tirou uma mão maior que a sua, você perdeu essa rodada!");
+                                pontosDoComputador++;
+                            } else {
+                                System.out.println("\nVocê ganhou essa rodada, pois fez mais pontos que o computador");
+                                pontosDoJogador++;
+                            }
+
                             break;
-                        } else if (maoComputador.getSomaDaMao() > VALOR_PONTUACAO) {
-                            System.out.println("\nVocê ganhou essa rodada! O computador ultrapassou 21!");
-                            pontosDoJogador++;
                         }
+
                     }
                 }
             }
@@ -200,7 +257,8 @@ public class Main {
         boolean validaEntradaUsuario = false;
 
         do {
-            System.out.println("\nGostaria de continuar jogando? (Digite 1 para sim ou qualquer outro número para sair)");
+            System.out
+                    .println("\nGostaria de continuar jogando? (Digite 1 para sim ou qualquer outro número para sair)");
 
             if (enter.hasNextInt()) {
                 numeroDigitado = enter.nextInt();

@@ -52,13 +52,12 @@ public class Baralho {
     }
 
     public Carta pop() {
+        
         if (!this.isEmpty()) {
             this.topo--;
-            return this.cartas[this.topo];
-        } else {
-            System.out.println("Não há mais cartas para comprar no baralho, o jogo chegou ao fim!");
-            return cartas[topo];
         }
+
+        return this.cartas[this.topo];
     }
 
     public boolean isFull() {
