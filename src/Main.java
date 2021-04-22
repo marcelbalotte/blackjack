@@ -1,7 +1,5 @@
 import java.util.Scanner;
 
-//TODO: fazer restrição de 5 cartas ou até número 17
-
 public class Main {
     // declaraão de constantes
     public static final int RESTRICAO_QUANTIDADE_CARTAS = 7;
