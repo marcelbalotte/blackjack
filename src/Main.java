@@ -24,21 +24,29 @@ public class Main {
         int qtdBaralhos = 0;
         Baralho baralho;
 
+        qtdBaralhos = persistirEntradaQuantidadeDeck(enter);
+
+        baralho = new Baralho(qtdBaralhos);
+
+        System.out.println("\nComeçaremos o jogo com um deck de " + qtdBaralhos * 52 + " cartas!");
+
         do {
-
-            qtdBaralhos = persistirEntradaQuantidadeDeck(enter);
-
-            baralho = new Baralho(qtdBaralhos);
-
-            System.out.println("\nComeçaremos o jogo com um deck de " + qtdBaralhos * 52 + " cartas!");
 
             // CÓDIGOS DA VEZ DO JOGADOR
             Mao maoJogador = new Mao(NOME_OPERADOR_HUMANO);
 
             // JOGADOR COMEÇA COM DUAS CARTAS
 
-            maoJogador.push(baralho.pop());
-            maoJogador.push(baralho.pop());
+            if (!maoJogador.push(baralho.pop(), baralho)) {
+                break;
+            }
+
+            if (!maoJogador.push(baralho.pop(), baralho)) {
+                break;
+            }
+
+            // maoJogador.push(baralho.pop());
+            // maoJogador.push(baralho.pop());
 
             System.out.println("\nPreparado? Vamos lá! Essas são suas duas cartas iniciais:");
             maoJogador.imprimir();
@@ -57,7 +65,10 @@ public class Main {
                         comprarOutraCarta = persistirEntradaStandHit(enter);
 
                         if (comprarOutraCarta == 1) {
-                            maoJogador.push(baralho.pop());
+
+                            if (!maoJogador.push(baralho.pop(), baralho)) {
+                                break;
+                            }
 
                             System.out.println("\nSuas cartas agora são:");
                             maoJogador.imprimir();
@@ -89,8 +100,16 @@ public class Main {
                 Mao maoComputador = new Mao(NOME_OPERADOR_MAQUINA);
 
                 // JOGADOR COMEÇA COM DUAS CARTAS
-                maoComputador.push(baralho.pop());
-                maoComputador.push(baralho.pop());
+
+                if (!maoComputador.push(baralho.pop(), baralho)) {
+                    break;
+                }
+
+                if (!maoComputador.push(baralho.pop(), baralho)) {
+                    break;
+                }
+                // maoComputador.push(baralho.pop());
+                // maoComputador.push(baralho.pop());
 
                 System.out.println("\nAs duas cartas iniciais do computador são:");
                 maoComputador.imprimir();
@@ -129,7 +148,12 @@ public class Main {
                         if (maoComputador.getTopo() < RESTRICAO_QUANTIDADE_CARTAS
                                 && maoComputador.getSomaDaMao() < 17) {
                             System.out.println("\nO computador faz um hit:");
-                            maoComputador.push(baralho.pop());
+
+                            if (!maoComputador.push(baralho.pop(), baralho)) {
+                                break;
+                            }
+
+                            // maoComputador.push(baralho.pop());
                             maoComputador.imprimir();
 
                             if (maoComputador.getSomaDaMao() == VALOR_PONTUACAO
@@ -191,9 +215,11 @@ public class Main {
             System.out.println("\nQue pena, você perdeu!");
         }
 
-        System.out.println("\nAs cartas que sobraram no baralho são:");
+        if (!baralho.isEmpty()) {
+            System.out.println("\nAs cartas que sobraram no baralho são:");
 
-        baralho.imprimir();
+            baralho.imprimir();
+        }
     }
 
     public static int persistirEntradaQuantidadeDeck(Scanner enter) {
