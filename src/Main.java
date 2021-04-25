@@ -43,9 +43,6 @@ public class Main {
                 break;
             }
 
-            // maoJogador.push(baralho.pop());
-            // maoJogador.push(baralho.pop());
-
             System.out.println("\nPreparado? Vamos lá! Essas são suas duas cartas iniciais:");
             maoJogador.imprimir();
 
@@ -106,8 +103,6 @@ public class Main {
                 if (!maoComputador.push(baralho.pop(), baralho)) {
                     break;
                 }
-                // maoComputador.push(baralho.pop());
-                // maoComputador.push(baralho.pop());
 
                 System.out.println("\nAs duas cartas iniciais do computador são:");
                 maoComputador.imprimir();
@@ -150,8 +145,7 @@ public class Main {
                             if (!maoComputador.push(baralho.pop(), baralho)) {
                                 break;
                             }
-
-                            // maoComputador.push(baralho.pop());
+                            
                             maoComputador.imprimir();
 
                             if (maoComputador.getSomaDaMao() == VALOR_PONTUACAO
@@ -281,14 +275,14 @@ public class Main {
         boolean validaEntradaUsuario = false;
 
         do {
-            System.out
-                    .println("\nGostaria de continuar jogando? (Digite 1 para sim ou qualquer outro número para sair)");
+            System.out.println("\nGostaria de continuar jogando? (Digite 1 para sim ou qualquer outro número para sair)");
 
             if (enter.hasNextInt()) {
                 numeroDigitado = enter.nextInt();
                 validaEntradaUsuario = true;
             } else {
                 enter.nextLine();
+                enter = new Scanner(System.in); // CRIO UMA NOVA INSTÂNCIA PARA PODER "LIMPAR" O OBJETO
                 System.out.println("\nDigite um valor válido!");
             }
 
